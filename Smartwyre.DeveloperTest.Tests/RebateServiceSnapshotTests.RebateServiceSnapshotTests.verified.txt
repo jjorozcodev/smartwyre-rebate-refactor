@@ -1,0 +1,160 @@
+﻿[
+  {
+    Success: {
+      Success: false
+    },
+    CapturedAmount: 0.00,
+    Request: {
+      RebateIdentifier: R-01
+    },
+    ProductInfo: {
+      SupportedIncentives: AmountPerUom
+    },
+    RebateInfo: {
+      Incentive: FixedCashAmount
+    }
+  },
+  {
+    Success: {
+      Success: false
+    },
+    CapturedAmount: 0.00,
+    Request: {
+      RebateIdentifier: R-02
+    },
+    ProductInfo: {
+      SupportedIncentives: FixedCashAmount
+    },
+    RebateInfo: {
+      Incentive: FixedCashAmount
+    }
+  },
+  {
+    Success: {
+      Success: true
+    },
+    CapturedAmount: 50.00,
+    Request: {
+      RebateIdentifier: R-03
+    },
+    ProductInfo: {
+      SupportedIncentives: FixedCashAmount
+    },
+    RebateInfo: {
+      Incentive: FixedCashAmount,
+      Amount: 50.0
+    }
+  },
+  {
+    Success: {
+      Success: false
+    },
+    CapturedAmount: 0.00,
+    Request: {
+      RebateIdentifier: R-11
+    },
+    RebateInfo: {}
+  },
+  {
+    Success: {
+      Success: false
+    },
+    CapturedAmount: 0.00,
+    Request: {
+      RebateIdentifier: R-12
+    },
+    ProductInfo: {
+      SupportedIncentives: AmountPerUom
+    },
+    RebateInfo: {}
+  },
+  {
+    Success: {
+      Success: false
+    },
+    CapturedAmount: 0.00,
+    Request: {
+      RebateIdentifier: R-13
+    },
+    ProductInfo: {
+      SupportedIncentives: FixedRateRebate
+    },
+    RebateInfo: {}
+  },
+  {
+    Success: {
+      Success: true
+    },
+    CapturedAmount: 100.00,
+    Request: {
+      RebateIdentifier: R-14,
+      Volume: 20.0
+    },
+    ProductInfo: {
+      Price: 50.0,
+      SupportedIncentives: FixedRateRebate
+    },
+    RebateInfo: {
+      Percentage: 0.10
+    }
+  },
+  {
+    Success: {
+      Success: false
+    },
+    CapturedAmount: 0.00,
+    Request: {
+      RebateIdentifier: R-21
+    },
+    RebateInfo: {
+      Incentive: AmountPerUom
+    }
+  },
+  {
+    Success: {
+      Success: false
+    },
+    CapturedAmount: 0.00,
+    Request: {
+      RebateIdentifier: R-22
+    },
+    ProductInfo: {
+      SupportedIncentives: FixedCashAmount
+    },
+    RebateInfo: {
+      Incentive: AmountPerUom
+    }
+  },
+  {
+    Success: {
+      Success: false
+    },
+    CapturedAmount: 0.00,
+    Request: {
+      RebateIdentifier: R-23
+    },
+    ProductInfo: {
+      SupportedIncentives: AmountPerUom
+    },
+    RebateInfo: {
+      Incentive: AmountPerUom
+    }
+  },
+  {
+    Success: {
+      Success: true
+    },
+    CapturedAmount: 2500.00,
+    Request: {
+      RebateIdentifier: R-24,
+      Volume: 25.0
+    },
+    ProductInfo: {
+      SupportedIncentives: AmountPerUom
+    },
+    RebateInfo: {
+      Incentive: AmountPerUom,
+      Amount: 100.0
+    }
+  }
+]

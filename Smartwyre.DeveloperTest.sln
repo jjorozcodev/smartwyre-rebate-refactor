@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ECE2D32E-18E9-4BD9-9EF7-7DD27719D5B2}"
 	ProjectSection(SolutionItems) = preProject
 		Readme.md = Readme.md
+		Smartwyre.DeveloperTest.Tests\RebateServiceSnapshotTests.RebateServiceSnapshotTests.verified.txt = Smartwyre.DeveloperTest.Tests\RebateServiceSnapshotTests.RebateServiceSnapshotTests.verified.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smartwyre.DeveloperTest.Runner", "Smartwyre.DeveloperTest.Runner\Smartwyre.DeveloperTest.Runner.csproj", "{9C165761-CB14-4120-9DF7-D2BCF0F8225C}"
