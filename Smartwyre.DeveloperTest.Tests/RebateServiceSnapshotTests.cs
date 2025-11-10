@@ -28,6 +28,12 @@ namespace Smartwyre.DeveloperTest.Tests
         public static IEnumerable<object[]> GetSnapshotScenarios()
         {
             yield return new object[] {
+                new CalculateRebateRequest { RebateIdentifier = "R-00" },
+                null,
+                null
+            };
+
+            yield return new object[] {
                 new CalculateRebateRequest { RebateIdentifier = "R-01" },
                 new Rebate { Incentive = IncentiveType.FixedCashAmount },
                 new Product { SupportedIncentives = SupportedIncentiveType.AmountPerUom }

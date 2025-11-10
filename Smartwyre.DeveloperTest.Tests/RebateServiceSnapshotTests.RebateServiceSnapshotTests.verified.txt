@@ -5,6 +5,15 @@
     },
     CapturedAmount: 0.00,
     Request: {
+      RebateIdentifier: R-00
+    }
+  },
+  {
+    Success: {
+      Success: false
+    },
+    CapturedAmount: 0.00,
+    Request: {
       RebateIdentifier: R-01
     },
     ProductInfo: {
