@@ -2,11 +2,11 @@
 
 namespace Smartwyre.DeveloperTest.Calculators
 {
-    public class FixedRateRebateCalculator : IRebateIncentiveCalculator
+    public class AmountPerUomCalculator : IRebateIncentiveCalculator
     {
         public bool IsValid(CalculateRebateRequest request, Rebate rebate, Product product)
         {
-            return (product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedRateRebate) && rebate.Percentage != 0 && product.Price != 0 && request.Volume != 0);
+            return (product.SupportedIncentives.HasFlag(SupportedIncentiveType.AmountPerUom) && rebate.Amount != 0 && request.Volume != 0);
         }
 
         public decimal Calculate(CalculateRebateRequest request, Rebate rebate, Product product)
@@ -14,7 +14,7 @@ namespace Smartwyre.DeveloperTest.Calculators
             decimal rebateAmount = 0.00m;
             if (IsValid(request, rebate, product))
             {
-                rebateAmount = product.Price * rebate.Percentage * request.Volume;
+                rebateAmount = rebate.Amount * request.Volume;
             }
             return rebateAmount;
         }

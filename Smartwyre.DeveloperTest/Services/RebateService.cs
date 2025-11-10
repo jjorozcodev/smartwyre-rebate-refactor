@@ -46,7 +46,7 @@ public class RebateService : IRebateService
         switch (rebate.Incentive)
         {
             case IncentiveType.FixedCashAmount:
-                rebateAmount = CalculateFixedCashAmount(result, rebate, product, rebateAmount);
+                rebateAmount = CalculateFixedCashAmount(request, result, rebate, product, rebateAmount);
                 break;
 
             case IncentiveType.FixedRateRebate:
@@ -72,9 +72,11 @@ public class RebateService : IRebateService
     {
         result.Success = false;
 
-        if (product.SupportedIncentives.HasFlag(SupportedIncentiveType.AmountPerUom) && rebate.Amount != 0 && request.Volume != 0)
+        var calcAmountPerUom = new AmountPerUomCalculator();
+
+        if (calcAmountPerUom.IsValid(request, rebate, product))
         {
-            rebateAmount += rebate.Amount * request.Volume;
+            rebateAmount = calcAmountPerUom.Calculate(request, rebate, product);
             result.Success = true;
         }
 
@@ -96,13 +98,15 @@ public class RebateService : IRebateService
         return rebateAmount;
     }
 
-    private static decimal CalculateFixedCashAmount(CalculateRebateResult result, Rebate rebate, Product product, decimal rebateAmount)
+    private static decimal CalculateFixedCashAmount(CalculateRebateRequest request, CalculateRebateResult result, Rebate rebate, Product product, decimal rebateAmount)
     {
         result.Success = false;
 
-        if (product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedCashAmount) && rebate.Amount != 0)
+        var calcFixedCashAmount = new FixedCashAmountCalculator();
+
+        if (calcFixedCashAmount.IsValid(request, rebate, product))
         {
-            rebateAmount = rebate.Amount;
+            rebateAmount = calcFixedCashAmount.Calculate(request, rebate, product);
             result.Success = true;
         }
 
