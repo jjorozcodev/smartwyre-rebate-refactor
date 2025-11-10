@@ -45,51 +45,17 @@ public class RebateService : IRebateService
         switch (rebate.Incentive)
         {
             case IncentiveType.FixedCashAmount:
-                if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedCashAmount))
-                {
-                    result.Success = false;
-                }
-                else if (rebate.Amount == 0)
-                {
-                    result.Success = false;
-                }
-                else
-                {
-                    rebateAmount = rebate.Amount;
-                    result.Success = true;
-                }
+                rebateAmount = CalculateFixedCashAmount(result, rebate, product, rebateAmount);
                 break;
 
             case IncentiveType.FixedRateRebate:
-                if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedRateRebate))
-                {
-                    result.Success = false;
-                }
-                else if (rebate.Percentage == 0 || product.Price == 0 || request.Volume == 0)
-                {
-                    result.Success = false;
-                }
-                else
-                {
-                    rebateAmount += product.Price * rebate.Percentage * request.Volume;
-                    result.Success = true;
-                }
+                rebateAmount = CalculateFixedRateRebate(request, result, rebate, product, rebateAmount);
                 break;
 
             case IncentiveType.AmountPerUom:
-                if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.AmountPerUom))
-                {
-                    result.Success = false;
-                }
-                else if (rebate.Amount == 0 || request.Volume == 0)
-                {
-                    result.Success = false;
-                }
-                else
-                {
-                    rebateAmount += rebate.Amount * request.Volume;
-                    result.Success = true;
-                }
+                rebateAmount = CalculateAmountPerUom(request, result, rebate, product, rebateAmount);
+                break;
+            default:
                 break;
         }
 
@@ -99,5 +65,62 @@ public class RebateService : IRebateService
         }
 
         return result;
+    }
+
+    private static decimal CalculateAmountPerUom(CalculateRebateRequest request, CalculateRebateResult result, Rebate rebate, Product product, decimal rebateAmount)
+    {
+        if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.AmountPerUom))
+        {
+            result.Success = false;
+        }
+        else if (rebate.Amount == 0 || request.Volume == 0)
+        {
+            result.Success = false;
+        }
+        else
+        {
+            rebateAmount += rebate.Amount * request.Volume;
+            result.Success = true;
+        }
+
+        return rebateAmount;
+    }
+
+    private static decimal CalculateFixedRateRebate(CalculateRebateRequest request, CalculateRebateResult result, Rebate rebate, Product product, decimal rebateAmount)
+    {
+        if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedRateRebate))
+        {
+            result.Success = false;
+        }
+        else if (rebate.Percentage == 0 || product.Price == 0 || request.Volume == 0)
+        {
+            result.Success = false;
+        }
+        else
+        {
+            rebateAmount += product.Price * rebate.Percentage * request.Volume;
+            result.Success = true;
+        }
+
+        return rebateAmount;
+    }
+
+    private static decimal CalculateFixedCashAmount(CalculateRebateResult result, Rebate rebate, Product product, decimal rebateAmount)
+    {
+        if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedCashAmount))
+        {
+            result.Success = false;
+        }
+        else if (rebate.Amount == 0)
+        {
+            result.Success = false;
+        }
+        else
+        {
+            rebateAmount = rebate.Amount;
+            result.Success = true;
+        }
+
+        return rebateAmount;
     }
 }
