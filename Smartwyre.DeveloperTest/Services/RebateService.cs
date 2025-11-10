@@ -1,4 +1,5 @@
-﻿using Smartwyre.DeveloperTest.Data;
+﻿using Smartwyre.DeveloperTest.Calculators;
+using Smartwyre.DeveloperTest.Data;
 using Smartwyre.DeveloperTest.Types;
 
 namespace Smartwyre.DeveloperTest.Services;
@@ -84,9 +85,11 @@ public class RebateService : IRebateService
     {
         result.Success = false;
 
-        if (product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedRateRebate) && rebate.Percentage != 0 && product.Price != 0 && request.Volume != 0)
+        var calcFixedRateRebate = new FixedRateRebateCalculator();
+
+        if (calcFixedRateRebate.IsValid(request, rebate, product))
         {
-            rebateAmount += product.Price * rebate.Percentage * request.Volume;
+            rebateAmount = calcFixedRateRebate.Calculate(request, rebate, product);
             result.Success = true;
         }
 
