@@ -69,15 +69,9 @@ public class RebateService : IRebateService
 
     private static decimal CalculateAmountPerUom(CalculateRebateRequest request, CalculateRebateResult result, Rebate rebate, Product product, decimal rebateAmount)
     {
-        if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.AmountPerUom))
-        {
-            result.Success = false;
-        }
-        else if (rebate.Amount == 0 || request.Volume == 0)
-        {
-            result.Success = false;
-        }
-        else
+        result.Success = false;
+
+        if (product.SupportedIncentives.HasFlag(SupportedIncentiveType.AmountPerUom) && rebate.Amount != 0 && request.Volume != 0)
         {
             rebateAmount += rebate.Amount * request.Volume;
             result.Success = true;
@@ -88,15 +82,9 @@ public class RebateService : IRebateService
 
     private static decimal CalculateFixedRateRebate(CalculateRebateRequest request, CalculateRebateResult result, Rebate rebate, Product product, decimal rebateAmount)
     {
-        if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedRateRebate))
-        {
-            result.Success = false;
-        }
-        else if (rebate.Percentage == 0 || product.Price == 0 || request.Volume == 0)
-        {
-            result.Success = false;
-        }
-        else
+        result.Success = false;
+
+        if (product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedRateRebate) && rebate.Percentage != 0 && product.Price != 0 && request.Volume != 0)
         {
             rebateAmount += product.Price * rebate.Percentage * request.Volume;
             result.Success = true;
@@ -107,15 +95,9 @@ public class RebateService : IRebateService
 
     private static decimal CalculateFixedCashAmount(CalculateRebateResult result, Rebate rebate, Product product, decimal rebateAmount)
     {
-        if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedCashAmount))
-        {
-            result.Success = false;
-        }
-        else if (rebate.Amount == 0)
-        {
-            result.Success = false;
-        }
-        else
+        result.Success = false;
+
+        if (product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedCashAmount) && rebate.Amount != 0)
         {
             rebateAmount = rebate.Amount;
             result.Success = true;
