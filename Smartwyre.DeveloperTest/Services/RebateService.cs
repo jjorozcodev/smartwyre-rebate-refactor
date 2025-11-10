@@ -14,14 +14,27 @@ public class RebateService : IRebateService
         _productDataStore = productDataStore;
     }
 
+    private bool TryGetValidEntities(
+        CalculateRebateRequest request,
+        out Rebate rebate,
+        out Product product)
+    {
+        rebate = _rebateDataStore.GetRebate(request.RebateIdentifier);
+        product = _productDataStore.GetProduct(request.ProductIdentifier);
+
+        if (rebate == null || product == null)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public CalculateRebateResult Calculate(CalculateRebateRequest request)
     {
         var result = new CalculateRebateResult();
 
-        Rebate rebate = _rebateDataStore.GetRebate(request.RebateIdentifier);
-        Product product = _productDataStore.GetProduct(request.ProductIdentifier);
-
-        if (rebate == null || product == null)
+        if (!TryGetValidEntities(request, out var rebate, out var product))
         {
             result.Success = false;
             return result;
