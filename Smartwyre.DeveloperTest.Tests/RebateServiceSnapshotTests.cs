@@ -44,6 +44,54 @@ namespace Smartwyre.DeveloperTest.Tests
                 new Rebate { Incentive = IncentiveType.FixedCashAmount, Amount = 50 },
                 new Product { SupportedIncentives = SupportedIncentiveType.FixedCashAmount }
             };
+
+            yield return new object[] {
+                new CalculateRebateRequest { RebateIdentifier = "R-11" },
+                new Rebate { Incentive = IncentiveType.FixedRateRebate },
+                null
+            };
+
+            yield return new object[] {
+                new CalculateRebateRequest { RebateIdentifier = "R-12" },
+                new Rebate { Incentive = IncentiveType.FixedRateRebate },
+                new Product { SupportedIncentives = SupportedIncentiveType.AmountPerUom }
+            };
+
+            yield return new object[] {
+                new CalculateRebateRequest { RebateIdentifier = "R-13", Volume = 0 },
+                new Rebate { Incentive = IncentiveType.FixedRateRebate, Percentage = 0 },
+                new Product { SupportedIncentives = SupportedIncentiveType.FixedRateRebate, Price = 0 }
+            };
+
+            yield return new object[] {
+                new CalculateRebateRequest { RebateIdentifier = "R-14", Volume = 20 },
+                new Rebate { Incentive = IncentiveType.FixedRateRebate, Percentage = 0.10m },
+                new Product { SupportedIncentives = SupportedIncentiveType.FixedRateRebate, Price = 50 }
+            };
+
+            yield return new object[] {
+                new CalculateRebateRequest { RebateIdentifier = "R-21" },
+                new Rebate { Incentive = IncentiveType.AmountPerUom },
+                null
+            };
+
+            yield return new object[] {
+                new CalculateRebateRequest { RebateIdentifier = "R-22" },
+                new Rebate { Incentive = IncentiveType.AmountPerUom },
+                new Product { SupportedIncentives = SupportedIncentiveType.FixedCashAmount }
+            };
+
+            yield return new object[] {
+                new CalculateRebateRequest { RebateIdentifier = "R-23", Volume = 0 },
+                new Rebate { Incentive = IncentiveType.AmountPerUom, Amount = 0 },
+                new Product { SupportedIncentives = SupportedIncentiveType.AmountPerUom }
+            };
+
+            yield return new object[] {
+                new CalculateRebateRequest { RebateIdentifier = "R-24", Volume = 25 },
+                new Rebate { Incentive = IncentiveType.AmountPerUom, Amount = 100 },
+                new Product { SupportedIncentives = SupportedIncentiveType.AmountPerUom }
+            };
         }
 
         [Theory]
