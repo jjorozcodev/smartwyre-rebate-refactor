@@ -1,6 +1,6 @@
 ﻿namespace Smartwyre.DeveloperTest.Types
 {
-    public record RebateCalculationResult
+    public class RebateCalculationResult
     {
         public bool Success { get; init; }
 

@@ -51,6 +51,33 @@ namespace Smartwyre.DeveloperTest.Tests.Calculators
             Assert.False(validatedInputs.IsValid);
         }
 
+        [Fact]
+        public void Calculate_ShouldReturnInvalidResult_WhenInvalidInput()
+        {
+            // Arrange
+            var validatedInput = ValidatedRebateData.Failure("Invalid input.");
+
+            // Act
+            var result = _calculator.Calculate(validatedInput);
+
+            // Assert
+            Assert.False(result.Success);
+        }
+
+        [Fact]
+        public void Calculate_ShouldReturnInvalidResult_WhenIncorrectIncentiveType()
+        {
+            // Arrange
+            var validatedInput = ValidatedRebateData.Success(IncentiveType.FixedCashAmount, 0.0m, 0.0m, 0.0m, 0.0m);
+
+            // Act
+            var result = _calculator.Calculate(validatedInput);
+
+            // Assert
+            Assert.False(result.Success);
+            Assert.NotEmpty(result.Message);
+        }
+
         [Theory]
         [InlineData(2.50, 10, 25.00)]
         [InlineData(0.50, 4, 2.00)]

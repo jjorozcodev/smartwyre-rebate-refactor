@@ -22,6 +22,21 @@ namespace Smartwyre.DeveloperTest.Tests.Calculators
             // Assert
             Assert.True(validatedInputs.IsValid);
         }
+        
+        [Fact]
+        public void IsValid_ShouldReturnFalse_WhenProductPriceIsZero()
+        {
+            // Arrange
+            var request = new CalculateRebateRequest { Volume = 10 };
+            var rebate = new Rebate { Percentage = 0.10m };
+            _defaultProduct.Price = 0.0m;
+
+            // Act
+            var validatedInputs = _calculator.ValidateInputs(request, rebate, _defaultProduct);
+
+            // Assert
+            Assert.False(validatedInputs.IsValid);
+        }
 
         [Fact]
         public void IsValid_ShouldReturnFalse_WhenRebatePercentageIsZero()
@@ -49,6 +64,35 @@ namespace Smartwyre.DeveloperTest.Tests.Calculators
 
             // Assert
             Assert.False(validatedInputs.IsValid);
+            Assert.NotEmpty(validatedInputs.ErrorMessage);
+        }
+
+        [Fact]
+        public void Calculate_ShouldReturnInvalidResult_WhenInvalidInput()
+        {
+            // Arrange
+            var validatedInput = ValidatedRebateData.Failure("Invalid input.");
+
+            // Act
+            var result = _calculator.Calculate(validatedInput);
+
+            // Assert
+            Assert.False(result.Success);
+            Assert.NotEmpty(result.Message);
+        }
+
+        [Fact]
+        public void Calculate_ShouldReturnInvalidResult_WhenIncorrectIncentiveType()
+        {
+            // Arrange
+            var validatedInput = ValidatedRebateData.Success(IncentiveType.AmountPerUom, 0.0m, 0.0m, 0.0m, 0.0m);
+
+            // Act
+            var result = _calculator.Calculate(validatedInput);
+
+            // Assert
+            Assert.False(result.Success);
+            Assert.NotEmpty(result.Message);
         }
 
         [Theory]

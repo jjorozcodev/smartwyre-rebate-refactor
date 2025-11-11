@@ -1,6 +1,6 @@
 ﻿namespace Smartwyre.DeveloperTest.Types
 {
-    public record ValidatedRebateData
+    public class ValidatedRebateData
     {
         public bool IsValid { get; init; } = false;
         public string ErrorMessage { get; init; } = string.Empty;
