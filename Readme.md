@@ -29,6 +29,18 @@ Resolver (Service Locator): An IRebateCalculatorResolver was implemented to reso
 
 Null Object: The Null Object Pattern (NullRebateCalculator) was utilized to ensure that the RebateService doesn't need to check for null strategies, simplifying the Calculate method and gracefully handling unimplemented incentive types.
 
+C. Unit Tests & Quality Assurance
+
+Coverage includes FixedCashAmountCalculator, FixedRateRebateCalculator, AmountPerUomCalculator, and the essential NullCalculator.
+
+Tests ensure the RebateCalculatorResolver correctly handles strategy injection and the Null Object fallback.
+
+Confirms 100% code coverage across all new classes, guaranteeing code robustness and preventing future regressions.
+
+<img width="935" height="409" alt="image" src="https://github.com/user-attachments/assets/81e7fba0-a078-44d4-ad63-4b2a493a3050" />
+
+
+
 **3. Conclusion & Engineering Excellence**
 
 The RebateService is now Open for Extension (adding a new incentive only requires creating a new class implementing the interface) and Closed for Modification (the core RebateService remains untouched).
@@ -37,6 +49,4 @@ The RebateService is now Open for Extension (adding a new incentive only require
 
 | Task | Rationale & Status |
 | ------------- | ------------- |
-| Isolate Unit Tests for Calculators | Create dedicated Unit Tests for each concrete calculator strategy (FixedCashAmountCalculator, etc.) in the Smartwyre.DeveloperTest.Tests project to test their logic in isolation, separate from the Characterization Tests. |
 | Run Console Runner | Implement the logic within the Smartwyre.DeveloperTest.Runner application. This involves setting up the Dependency Injection (DI) container (e.g., using IServiceCollection), configuring the IRebateCalculatorResolver, and accepting user input to run the refactored RebateService. |
-| Null Object Integration | Ensure the DI container correctly maps all strategies and registers the NullRebateCalculator for scenarios where the IncentiveType is unknown or unsupported, solidifying the Strategy implementation. |
