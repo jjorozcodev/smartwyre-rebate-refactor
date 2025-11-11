@@ -8,17 +8,17 @@ namespace Smartwyre.DeveloperTest.Services;
 
 public class RebateService : IRebateService
 {
-    private readonly IEnumerable<IRebateIncentiveCalculator> _calculators;
+    private readonly IRebateCalculatorResolver _calculatorResolver;
 
     private readonly IRebateDataStore _rebateDataStore;
     private readonly IProductDataStore _productDataStore;
 
     public RebateService(
-        IEnumerable<IRebateIncentiveCalculator> calculators,
+        IRebateCalculatorResolver calculatorResolver,
         IRebateDataStore rebateDataStore,
         IProductDataStore productDataStore)
     {
-        _calculators = calculators;
+        _calculatorResolver = calculatorResolver;
 
         _rebateDataStore = rebateDataStore;
         _productDataStore = productDataStore;
@@ -49,9 +49,7 @@ public class RebateService : IRebateService
             return result;
         }
 
-        IRebateIncentiveCalculator incentiveCalculator = _calculators.FirstOrDefault(c => c.IncentiveType == rebate.Incentive);
-
-        if (incentiveCalculator is null) return result;
+        IRebateIncentiveCalculator incentiveCalculator = _calculatorResolver.Resolve(rebate.Incentive);
 
         var rebateAmount = 0m;
         if(incentiveCalculator.IsValid(request, rebate, product))

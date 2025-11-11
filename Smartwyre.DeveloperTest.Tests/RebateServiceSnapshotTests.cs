@@ -22,7 +22,8 @@ namespace Smartwyre.DeveloperTest.Tests
         {
             new FixedCashAmountCalculator(),
             new FixedRateRebateCalculator(),
-            new AmountPerUomCalculator()
+            new AmountPerUomCalculator(),
+            new NullRebateCalculator() // Null Object Pattern
         };
 
         public RebateServiceSnapshotTests()
@@ -30,8 +31,10 @@ namespace Smartwyre.DeveloperTest.Tests
             _rebateDataStoreMock = new Mock<IRebateDataStore>();
             _productDataStoreMock = new Mock<IProductDataStore>();
 
+            IRebateCalculatorResolver rebateCalculatorResolver = new RebateCalculatorResolver(_rebateCalculators);
+
             _service = new RebateService(
-                        _rebateCalculators,
+                        rebateCalculatorResolver,
                         _rebateDataStoreMock.Object,
                         _productDataStoreMock.Object);
         }
