@@ -6,14 +6,16 @@ namespace Smartwyre.DeveloperTest.Calculators
     {
         public IncentiveType IncentiveType => (IncentiveType)(-1);
 
-        public decimal Calculate(CalculateRebateRequest request, Rebate rebate, Product product)
+        public ValidatedRebateData ValidateInputs(CalculateRebateRequest request, Rebate rebate, Product product)
+        {
+            return ValidatedRebateData.Failure("Unsupported incentive type.");
+        }
+
+        public decimal Calculate(ValidatedRebateData validatedData)
         {
             return 0.0m;
         }
 
-        public bool IsValid(CalculateRebateRequest request, Rebate rebate, Product product)
-        {
-            return false;
-        }
+        
     }
 }

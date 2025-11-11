@@ -7,19 +7,30 @@ namespace Smartwyre.DeveloperTest.Calculators
     {
         public IncentiveType IncentiveType => IncentiveType.FixedCashAmount;
 
-        public bool IsValid(CalculateRebateRequest request, Rebate rebate, Product product)
+        public ValidatedRebateData ValidateInputs(CalculateRebateRequest request, Rebate rebate, Product product)
         {
-            return (product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedCashAmount) && rebate.Amount != 0);
+            if (!product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedCashAmount))
+                return ValidatedRebateData.Failure("Invalid incentive type.");
+            if (rebate.Amount == 0)
+                return ValidatedRebateData.Failure("Rebate amount cannot be zero.");
+
+            return ValidatedRebateData.Success(
+                    this.IncentiveType,
+                    product.Price,
+                    rebate.Amount,
+                    rebate.Percentage,
+                    request.Volume
+                );
         }
 
-        public decimal Calculate(CalculateRebateRequest request, Rebate rebate, Product product)
+        public decimal Calculate(ValidatedRebateData validatedData)
         {
-            decimal rebateAmount = 0.00m;
-            if (IsValid(request, rebate, product))
-            {
-                rebateAmount = rebate.Amount;
-            }
-            return rebateAmount;
+            if (!validatedData.IsValid)
+                throw new ArgumentException("Invalid input data.");
+            if (validatedData.IncentiveTypeValidated != this.IncentiveType)
+                throw new ArgumentException("Validated data is incorrect for this calculation operation.");
+
+            return validatedData.RebateAmount;
         }
     }
 }

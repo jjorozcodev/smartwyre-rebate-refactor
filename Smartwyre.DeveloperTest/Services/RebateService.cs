@@ -1,8 +1,6 @@
 ﻿using Smartwyre.DeveloperTest.Calculators;
 using Smartwyre.DeveloperTest.Data;
 using Smartwyre.DeveloperTest.Types;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Smartwyre.DeveloperTest.Services;
 
@@ -51,11 +49,12 @@ public class RebateService : IRebateService
 
         IRebateIncentiveCalculator incentiveCalculator = _calculatorResolver.Resolve(rebate.Incentive);
 
-        var rebateAmount = 0m;
-        if(incentiveCalculator.IsValid(request, rebate, product))
+        var validatedInputs = incentiveCalculator.ValidateInputs(request, rebate, product);
+
+        if(validatedInputs.IsValid)
         {
             result.Success = true;
-            rebateAmount = incentiveCalculator.Calculate(request, rebate, product);
+            var rebateAmount = incentiveCalculator.Calculate(validatedInputs);
 
             _rebateDataStore.StoreCalculationResult(rebate, rebateAmount);
         }

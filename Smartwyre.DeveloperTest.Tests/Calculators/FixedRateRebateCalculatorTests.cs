@@ -17,10 +17,10 @@ namespace Smartwyre.DeveloperTest.Tests.Calculators
             var rebate = new Rebate { Percentage = 0.05m };
 
             // Act
-            var isValid = _calculator.IsValid(request, rebate, _defaultProduct);
+            var validatedInputs = _calculator.ValidateInputs(request, rebate, _defaultProduct);
 
             // Assert
-            Assert.True(isValid);
+            Assert.True(validatedInputs.IsValid);
         }
 
         [Fact]
@@ -31,10 +31,10 @@ namespace Smartwyre.DeveloperTest.Tests.Calculators
             var rebate = new Rebate { Percentage = 0.00m };
 
             // Act
-            var isValid = _calculator.IsValid(request, rebate, _defaultProduct);
+            var validatedInputs = _calculator.ValidateInputs(request, rebate, _defaultProduct);
 
             // Assert
-            Assert.False(isValid);
+            Assert.False(validatedInputs.IsValid);
         }
 
         [Fact]
@@ -45,10 +45,10 @@ namespace Smartwyre.DeveloperTest.Tests.Calculators
             var rebate = new Rebate { Percentage = 0.05m };
 
             // Act
-            var isValid = _calculator.IsValid(request, rebate, _defaultProduct);
+            var validatedInputs = _calculator.ValidateInputs(request, rebate, _defaultProduct);
 
             // Assert
-            Assert.False(isValid);
+            Assert.False(validatedInputs.IsValid);
         }
 
         [Theory]
@@ -61,7 +61,8 @@ namespace Smartwyre.DeveloperTest.Tests.Calculators
             var product = new Product { SupportedIncentives = SupportedIncentiveType.FixedRateRebate, Price = price };
             var rebate = new Rebate { Percentage = percentage };
             // Act
-            var calculatedAmount = _calculator.Calculate(request, rebate, product);
+            var validatedInputs = _calculator.ValidateInputs(request, rebate, product);
+            var calculatedAmount = _calculator.Calculate(validatedInputs);
 
             // Assert
             Assert.Equal(expectedAmount, calculatedAmount);

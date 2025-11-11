@@ -17,10 +17,10 @@ namespace Smartwyre.DeveloperTest.Tests.Calculators
             var product = new Product { SupportedIncentives = SupportedIncentiveType.AmountPerUom };
 
             // Act
-            var isValid = _calculator.IsValid(request, rebate, product);
+            var validatedInputs = _calculator.ValidateInputs(request, rebate, product);
 
             // Assert
-            Assert.False(isValid);
+            Assert.False(validatedInputs.IsValid);
         }
 
         [Fact]
@@ -32,7 +32,8 @@ namespace Smartwyre.DeveloperTest.Tests.Calculators
             var product = new Product { SupportedIncentives = SupportedIncentiveType.FixedCashAmount };
 
             // Act
-            var calculatedAmount = _calculator.Calculate(request, rebate, product);
+            var validatedInputs = _calculator.ValidateInputs(request, rebate, product);
+            var calculatedAmount = _calculator.Calculate(validatedInputs);
 
             // Assert
             Assert.Equal(0.00m, calculatedAmount);
