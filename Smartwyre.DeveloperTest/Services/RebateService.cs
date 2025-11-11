@@ -51,12 +51,16 @@ public class RebateService : IRebateService
 
         var validatedInputs = incentiveCalculator.ValidateInputs(request, rebate, product);
 
-        if(validatedInputs.IsValid)
+        if (!validatedInputs.IsValid)
         {
-            result.Success = true;
-            var rebateAmount = incentiveCalculator.Calculate(validatedInputs);
+            return result;
+        }
 
-            _rebateDataStore.StoreCalculationResult(rebate, rebateAmount);
+        var operationResult = incentiveCalculator.Calculate(validatedInputs);
+        if (operationResult.Success)
+        {
+            _rebateDataStore.StoreCalculationResult(rebate, operationResult.RebateAmount);
+            result.Success = true;
         }
 
         return result;

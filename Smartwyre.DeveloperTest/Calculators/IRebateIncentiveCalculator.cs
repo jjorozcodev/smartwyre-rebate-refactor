@@ -6,6 +6,6 @@ namespace Smartwyre.DeveloperTest.Calculators
     {
         IncentiveType IncentiveType { get; }
         ValidatedRebateData ValidateInputs(CalculateRebateRequest request, Rebate rebate, Product product);
-        decimal Calculate(ValidatedRebateData validatedData);
+        RebateCalculationResult Calculate(ValidatedRebateData validatedData);
     }
 }

@@ -27,14 +27,15 @@ namespace Smartwyre.DeveloperTest.Calculators
                 );
         }
 
-        public decimal Calculate(ValidatedRebateData validatedData)
+        public RebateCalculationResult Calculate(ValidatedRebateData validatedData)
         {
             if (!validatedData.IsValid)
-                throw new ArgumentException("Invalid input data.");
+                return RebateCalculationResult.Failure("Invalid input data.");
             if (validatedData.IncentiveTypeValidated != this.IncentiveType)
-                throw new ArgumentException("Validated data is incorrect for this calculation operation.");
+                return RebateCalculationResult.Failure("Validated data is incorrect for this calculation operation.");
 
-            return validatedData.ProductPrice * validatedData.RebatePercentage * validatedData.RequestVolume;
+            decimal calculated = validatedData.ProductPrice * validatedData.RebatePercentage * validatedData.RequestVolume;
+            return RebateCalculationResult.Successful(calculated);
         }
     }
 }

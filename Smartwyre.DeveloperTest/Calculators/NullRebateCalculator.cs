@@ -11,9 +11,9 @@ namespace Smartwyre.DeveloperTest.Calculators
             return ValidatedRebateData.Failure("Unsupported incentive type.");
         }
 
-        public decimal Calculate(ValidatedRebateData validatedData)
+        public RebateCalculationResult Calculate(ValidatedRebateData validatedData)
         {
-            return 0.0m;
+            return RebateCalculationResult.Successful(0.0m);
         }
 
         

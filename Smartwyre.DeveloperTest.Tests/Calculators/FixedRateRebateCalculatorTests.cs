@@ -62,10 +62,10 @@ namespace Smartwyre.DeveloperTest.Tests.Calculators
             var rebate = new Rebate { Percentage = percentage };
             // Act
             var validatedInputs = _calculator.ValidateInputs(request, rebate, product);
-            var calculatedAmount = _calculator.Calculate(validatedInputs);
+            var result = _calculator.Calculate(validatedInputs);
 
             // Assert
-            Assert.Equal(expectedAmount, calculatedAmount);
+            Assert.Equal(expectedAmount, result.RebateAmount);
         }
     }
 }

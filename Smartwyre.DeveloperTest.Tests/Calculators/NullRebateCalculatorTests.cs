@@ -33,10 +33,10 @@ namespace Smartwyre.DeveloperTest.Tests.Calculators
 
             // Act
             var validatedInputs = _calculator.ValidateInputs(request, rebate, product);
-            var calculatedAmount = _calculator.Calculate(validatedInputs);
+            var result = _calculator.Calculate(validatedInputs);
 
             // Assert
-            Assert.Equal(0.00m, calculatedAmount);
+            Assert.Equal(0.00m, result.RebateAmount);
         }
 
         [Fact]
