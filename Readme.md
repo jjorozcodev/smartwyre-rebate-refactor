@@ -1,46 +1,42 @@
-# Smartwyre Developer Test Instructions
+# Smartwyre Rebate Service Refactoring
+**************************************
+Developer Test Instructions: https://github.com/Smartwyre/developer-interview-test
 
-You have been selected to complete our candidate coding exercise. Please follow the directions in this readme.
+## Engineering Principle: Strategy Pattern and TDD
 
-Clone, **DO NOT FORK**, this repository to your account on the online Git resource of your choosing (GitHub, BitBucket, GitLab, etc.). Your solution should retain previous commit history and you should utilize best practices for committing your changes to the repository.
+This project involves a strategic refactoring of the RebateService to address violations of the Open/Closed Principle (OCP) and the Single Responsibility Principle (SRP), transforming a large conditional block (switch) into a modular design based on the Strategy Pattern.
 
-You are welcome to use whatever tools you normally would when coding — including documentation, libraries, frameworks, or AI tools (such as ChatGPT or Copilot).
+**1. The Challenge & Safety Net**
 
-However, it is important that you fully understand your solution. As part of the interview process, we will review your code with you in detail. You should be able to:
+The original Calculate method contained a large switch statement tightly coupled to the IncentiveType, mandating modifications to the service every time a new incentive type was introduced (OCP violation).
 
-- Explain the design choices you made.
-- Walk us through how your solution works.
-- Make modifications or extensions to your code during the review.
+Before Refactoring: Characterization Testing (Golden Master)
+Crucially, before attempting any refactoring or modification of the core business logic in RebateService, Characterization Tests (Golden Master) were implemented using Verify.Xunit. This step served as an essential safety net, capturing and locking down the existing behavior of the legacy code. This guarantees that the refactoring preserved 100% of the existing business logic, including specific calculations and failure rules.
 
-Please note: if your submission appears to have been generated entirely by an AI agent or another third party, without your own understanding or contribution, it will not meet our evaluation criteria.
+**2. The Solution Applied: Decoupling via Strategy**
 
-# The Exercise
+The refactoring was executed in atomic commits, focused on decoupling and modularity. This structure ensures Adherence to SOLID principles, High Extensibility, and Improved Testability.
 
-In the 'RebateService.cs' file you will find a method for calculating a rebate. At a high level the steps for calculating a rebate are:
+A. Strategy Pattern (OCP & SRP)
 
- 1. Lookup the rebate that the request is being made against.
- 2. Lookup the product that the request is being made against.
- 2. Check that the rebate and request are valid to calculate the incentive type rebate.
- 3. Store the rebate calculation.
+Interface: IRebateIncentiveCalculator was created to define the contract (IsValid and Calculate).
 
-What we'd like you to do is refactor the code with the following things in mind:
+Concrete Strategies: FixedCashAmountCalculator, FixedRateRebateCalculator, and AmountPerUomCalculator were created, each handling its own specific validation and calculation logic (fulfilling SRP).
 
- - Adherence to SOLID principles
- - Testability
- - Readability
- - Currently there are 3 known incentive types. In the future the business will want to add many more incentive types. Your solution should make it easy for developers to add new incentive types in the future.
+B. Service Locator and Null Object (IoC Integration)
 
-We’d also like you to 
- - Add some unit tests to the Smartwyre.DeveloperTest.Tests project to show how you would test the code that you’ve produced 
- - Run the RebateService from the Smartwyre.DeveloperTest.Runner console application accepting inputs (either via command line arguments or via prompts is fine)
+Resolver (Service Locator): An IRebateCalculatorResolver was implemented to resolve the correct strategy based on the IncentiveType of the Rebate, centralizing the dependency lookup.
 
-The only specific "rules" are:
+Null Object: The Null Object Pattern (NullRebateCalculator) was utilized to ensure that the RebateService doesn't need to check for null strategies, simplifying the Calculate method and gracefully handling unimplemented incentive types.
 
-- The solution must build
-- All tests must pass
+**3. Conclusion & Engineering Excellence**
 
-You are free to use any frameworks/NuGet packages that you see fit. You should plan to spend around 1 hour completing the exercise.
+The RebateService is now Open for Extension (adding a new incentive only requires creating a new class implementing the interface) and Closed for Modification (the core RebateService remains untouched).
 
-Feel free to use code comments to describe your changes. You are also welcome to update this readme with any important details for us to consider.
+**4. Next Steps & Pending Tasks (Completing Deliverables)**
 
-Once you have completed the exercise either ensure your repository is available publicly or contact the hiring manager to set up a private share.
+| Task | Rationale & Status |
+| ------------- | ------------- |
+| Isolate Unit Tests for Calculators | Create dedicated Unit Tests for each concrete calculator strategy (FixedCashAmountCalculator, etc.) in the Smartwyre.DeveloperTest.Tests project to test their logic in isolation, separate from the Characterization Tests. |
+| Run Console Runner | Implement the logic within the Smartwyre.DeveloperTest.Runner application. This involves setting up the Dependency Injection (DI) container (e.g., using IServiceCollection), configuring the IRebateCalculatorResolver, and accepting user input to run the refactored RebateService. |
+| Null Object Integration | Ensure the DI container correctly maps all strategies and registers the NullRebateCalculator for scenarios where the IncentiveType is unknown or unsupported, solidifying the Strategy implementation. |
