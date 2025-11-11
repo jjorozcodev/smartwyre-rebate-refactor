@@ -1,4 +1,5 @@
 ﻿using Moq;
+using Smartwyre.DeveloperTest.Calculators;
 using Smartwyre.DeveloperTest.Data;
 using Smartwyre.DeveloperTest.Services;
 using Smartwyre.DeveloperTest.Types;
@@ -17,12 +18,22 @@ namespace Smartwyre.DeveloperTest.Tests
         private readonly Mock<IRebateDataStore> _rebateDataStoreMock;
         private readonly Mock<IProductDataStore> _productDataStoreMock;
 
+        private static readonly IEnumerable<IRebateIncentiveCalculator> _rebateCalculators = new List<IRebateIncentiveCalculator>
+        {
+            new FixedCashAmountCalculator(),
+            new FixedRateRebateCalculator(),
+            new AmountPerUomCalculator()
+        };
+
         public RebateServiceSnapshotTests()
         {
             _rebateDataStoreMock = new Mock<IRebateDataStore>();
             _productDataStoreMock = new Mock<IProductDataStore>();
 
-            _service = new RebateService(_rebateDataStoreMock.Object, _productDataStoreMock.Object);
+            _service = new RebateService(
+                        _rebateCalculators,
+                        _rebateDataStoreMock.Object,
+                        _productDataStoreMock.Object);
         }
 
         public static IEnumerable<object[]> GetSnapshotScenarios()

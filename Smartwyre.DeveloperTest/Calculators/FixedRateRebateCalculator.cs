@@ -4,6 +4,8 @@ namespace Smartwyre.DeveloperTest.Calculators
 {
     public class FixedRateRebateCalculator : IRebateIncentiveCalculator
     {
+        public IncentiveType IncentiveType => IncentiveType.FixedRateRebate;
+
         public bool IsValid(CalculateRebateRequest request, Rebate rebate, Product product)
         {
             return (product.SupportedIncentives.HasFlag(SupportedIncentiveType.FixedRateRebate) && rebate.Percentage != 0 && product.Price != 0 && request.Volume != 0);

@@ -1,16 +1,25 @@
 ﻿using Smartwyre.DeveloperTest.Calculators;
 using Smartwyre.DeveloperTest.Data;
 using Smartwyre.DeveloperTest.Types;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Smartwyre.DeveloperTest.Services;
 
 public class RebateService : IRebateService
 {
+    private readonly IEnumerable<IRebateIncentiveCalculator> _calculators;
+
     private readonly IRebateDataStore _rebateDataStore;
     private readonly IProductDataStore _productDataStore;
 
-    public RebateService(IRebateDataStore rebateDataStore, IProductDataStore productDataStore)
+    public RebateService(
+        IEnumerable<IRebateIncentiveCalculator> calculators,
+        IRebateDataStore rebateDataStore,
+        IProductDataStore productDataStore)
     {
+        _calculators = calculators;
+
         _rebateDataStore = rebateDataStore;
         _productDataStore = productDataStore;
     }
@@ -33,83 +42,26 @@ public class RebateService : IRebateService
 
     public CalculateRebateResult Calculate(CalculateRebateRequest request)
     {
-        var result = new CalculateRebateResult();
+        var result = new CalculateRebateResult() { Success = false };
 
         if (!TryGetValidEntities(request, out var rebate, out var product))
         {
-            result.Success = false;
             return result;
         }
 
+        IRebateIncentiveCalculator incentiveCalculator = _calculators.FirstOrDefault(c => c.IncentiveType == rebate.Incentive);
+
+        if (incentiveCalculator is null) return result;
+
         var rebateAmount = 0m;
-
-        switch (rebate.Incentive)
+        if(incentiveCalculator.IsValid(request, rebate, product))
         {
-            case IncentiveType.FixedCashAmount:
-                rebateAmount = CalculateFixedCashAmount(request, result, rebate, product, rebateAmount);
-                break;
+            result.Success = true;
+            rebateAmount = incentiveCalculator.Calculate(request, rebate, product);
 
-            case IncentiveType.FixedRateRebate:
-                rebateAmount = CalculateFixedRateRebate(request, result, rebate, product, rebateAmount);
-                break;
-
-            case IncentiveType.AmountPerUom:
-                rebateAmount = CalculateAmountPerUom(request, result, rebate, product, rebateAmount);
-                break;
-            default:
-                break;
-        }
-
-        if (result.Success)
-        {
             _rebateDataStore.StoreCalculationResult(rebate, rebateAmount);
         }
 
         return result;
-    }
-
-    private static decimal CalculateAmountPerUom(CalculateRebateRequest request, CalculateRebateResult result, Rebate rebate, Product product, decimal rebateAmount)
-    {
-        result.Success = false;
-
-        var calcAmountPerUom = new AmountPerUomCalculator();
-
-        if (calcAmountPerUom.IsValid(request, rebate, product))
-        {
-            rebateAmount = calcAmountPerUom.Calculate(request, rebate, product);
-            result.Success = true;
-        }
-
-        return rebateAmount;
-    }
-
-    private static decimal CalculateFixedRateRebate(CalculateRebateRequest request, CalculateRebateResult result, Rebate rebate, Product product, decimal rebateAmount)
-    {
-        result.Success = false;
-
-        var calcFixedRateRebate = new FixedRateRebateCalculator();
-
-        if (calcFixedRateRebate.IsValid(request, rebate, product))
-        {
-            rebateAmount = calcFixedRateRebate.Calculate(request, rebate, product);
-            result.Success = true;
-        }
-
-        return rebateAmount;
-    }
-
-    private static decimal CalculateFixedCashAmount(CalculateRebateRequest request, CalculateRebateResult result, Rebate rebate, Product product, decimal rebateAmount)
-    {
-        result.Success = false;
-
-        var calcFixedCashAmount = new FixedCashAmountCalculator();
-
-        if (calcFixedCashAmount.IsValid(request, rebate, product))
-        {
-            rebateAmount = calcFixedCashAmount.Calculate(request, rebate, product);
-            result.Success = true;
-        }
-
-        return rebateAmount;
     }
 }

@@ -4,6 +4,8 @@ namespace Smartwyre.DeveloperTest.Calculators
 {
     public class AmountPerUomCalculator : IRebateIncentiveCalculator
     {
+        public IncentiveType IncentiveType => IncentiveType.AmountPerUom;
+
         public bool IsValid(CalculateRebateRequest request, Rebate rebate, Product product)
         {
             return (product.SupportedIncentives.HasFlag(SupportedIncentiveType.AmountPerUom) && rebate.Amount != 0 && request.Volume != 0);
